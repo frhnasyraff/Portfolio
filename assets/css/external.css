@@ -1,0 +1,17 @@
+/* Ni untuk buat button pill macam tag/label */
+.pill {
+  font-size: 12px;
+  font-family: 'Reader Pro', sans-serif;
+  padding: 0.5rem 1em;
+  margin: 0.25rem;
+  border-radius: 1em;
+  border: none;
+  outline: none;
+  background: rgb(165, 255, 39);
+  cursor: pointer;
+  color: black;
+}
+
+.pill:hover {
+  background: rgb(20, 172, 0);
+}
