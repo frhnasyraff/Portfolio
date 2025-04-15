@@ -15,3 +15,111 @@
 .pill:hover {
   background: rgb(20, 172, 0);
 }
+
+/* Elegant Profile Image Styling */
+.home__perfil {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+}
+
+.home__perfil-border {
+  position: relative;
+  width: 190px;
+  height: 190px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--first-color), var(--first-color-alt));
+  padding: 1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.home__perfil-border:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.15);
+}
+
+.home__perfil-overlay {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--body-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.home__perfil-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+.home__perfil-border:hover .home__perfil-img {
+  transform: scale(1.05);
+}
+
+.home__decorative {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.home__shape-wawes {
+  position: absolute;
+  width: 40px;
+  left: -1rem;
+  top: -1rem;
+  opacity: 0.4;
+  animation: float 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.1));
+}
+
+.home__shape-circle {
+  position: absolute;
+  width: 120px;
+  bottom: -1.5rem;
+  right: -2rem;
+  opacity: 0.3;
+  animation: float 4s ease-in-out infinite;
+  filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.1));
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(2deg);
+  }
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+}
+
+/* Dark theme adjustments */
+.dark-theme .home__perfil-border {
+  background: linear-gradient(135deg, var(--first-color-alt), var(--first-color));
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.dark-theme .home__perfil-overlay {
+  background: var(--body-color);
+}
+
+.dark-theme .home__shape-wawes,
+.dark-theme .home__shape-circle {
+  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.1));
+}
