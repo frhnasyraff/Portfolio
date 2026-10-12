@@ -1,186 +1,105 @@
-/*=============== SHOW MENU ===============*/
-const navMenu = document.getElementById('nav-menu'),
-  navToggle = document.getElementById('nav-toggle'),
-  navClose = document.getElementById('nav-close');
-
-/*========= MENU SHOW =========*/
-// Validate if constant exists
-if (navToggle) {
-  navToggle.addEventListener('click', () => {
-    navMenu.classList.add('show-menu');
-  });
-}
-
-/*========= MENU HIDDEN =========*/
-// Validate if constant exists
-if (navClose) {
-  navClose.addEventListener('click', () => {
-    navMenu.classList.remove('show-menu');
-  });
-}
-
-/*=============== REMOVE MENU MOBILE ===============*/
-const navLink = document.querySelectorAll('.nav__link');
-
-const linkAction = () => {
-  const navMenu = document.getElementById('nav-menu');
-  // When we click on each nav__link, we remove the show-menu
-  navMenu.classList.remove('show-menu');
-};
-navLink.forEach((n) => n.addEventListener('click', linkAction));
-
-/*=============== SWIPER PROJECTS ===============*/
-let swiperProjects = new Swiper('.projects__container', {
-  loop: true,
-  spaceBetween: 24,
-
-  navigation: {
-    nextEl: '.swiper-button-next',
-    prevEl: '.swiper-button-prev',
-  },
-  pagination: {
-    el: '.swiper-pagination',
-  },
-  breakpoints: {
-    1200: {
-      slidesPerView: 2,
-      spaceBetween: -56,
-    },
-  },
-});
-
-/*=============== SWIPER TESTIMONIAL ===============*/
-let swiperTestimonial = new Swiper('.testimonial__container', {
-  grabCursor: true,
-
-  navigation: {
-    nextEl: '.swiper-button-next',
-    prevEl: '.swiper-button-prev',
-  },
-});
-
-/*=============== EMAIL JS ===============*/
-const contactForm = document.getElementById('contact-form'),
-  contactName = document.getElementById('contact-name'),
-  contactEmail = document.getElementById('contact-email'),
-  contactProject = document.getElementById('contact-project'),
-  contactMessage = document.getElementById('contact-message');
-
-const sendEmail = (e) => {
-  e.preventDefault();
-
-  // Check if the field has a value
-  if (contactName.value === '' || contactEmail.value === '' || contactProject.value === '') {
-    // Add remote color
-    contactMessage.classList.remove('color-blue');
-    contactMessage.classList.add('color-red');
-
-    // Show Message
-    contactMessage.textContent = 'Write all the input fields';
-  } else {
-    // serviceID - templateID #form - publickey
-    emailjs.sendForm('service_bcrn9fj', 'template_zfjl049', '#contact-form', 'RTdJ2ieubNULfs2bA').then(
-      () => {
-        // Show Message and color
-        contactMessage.classList.add('color-blue');
-        contactMessage.textContent = 'Message send';
-
-        // Remove Message after 5 seconds
-        setTimeout(() => {
-          contactMessage.textContent = '';
-        }, 5000);
-      },
-      (error) => {
-        alert('OOPS! SOMETHING HAS FAILED...', error);
-      }
-    );
-
-    // To clear the input field
-    contactName.value = '';
-    contactEmail.value = '';
-    contactProject.value = '';
-  }
-};
-contactForm.addEventListener('submit', sendEmail);
-
-/*=============== SCROLL SECTIONS ACTIVE LINK ===============*/
-const sections = document.querySelectorAll('section[id]');
-
-const scrollActive = () => {
-  const scrollY = window.pageYOffset;
-
-  sections.forEach((current) => {
-    const sectionHeight = current.offsetHeight,
-      sectionTop = current.offsetTop - 58,
-      sectionId = current.getAttribute('id'),
-      sectionsClass = document.querySelector('.nav__menu a[href*=' + sectionId + ']');
-
-    if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
-      sectionsClass.classList.add('active-link');
-    } else {
-      sectionsClass.classList.remove('active-link');
-    }
-  });
-};
-window.addEventListener('scroll', scrollActive);
-/*=============== SHOW SCROLL UP ===============*/
-const scrollUp = () => {
-  const scrollUp = document.getElementById('scroll-up');
-  // When the scroll is higher than 350 viewport height,
-  //add the show-scroll class to the a tag with the scrollup class
-  this.scrollY >= 350 ? scrollUp.classList.add('show-scroll') : scrollUp.classList.remove('show-scroll');
-};
-window.addEventListener('scroll', scrollUp);
-
-/*=============== DARK LIGHT THEME ===============*/
+const menu = document.getElementById('nav-menu');
+const toggle = document.getElementById('nav-toggle');
 const themeButton = document.getElementById('theme-button');
-const darkTheme = 'dark-theme';
-const iconTheme = 'ri-sun-line';
 
-// Previously selected topic (if user selected)
-const selectedTheme = localStorage.getItem('selected-theme');
-const selectedIcon = localStorage.getItem('selected-icon');
-
-// We obtain the current theme that the interface has by validating the dark-theme class
-const getCurrentTheme = () => (document.body.classList.contains(darkTheme) ? 'dark' : 'light');
-const getCurrentIcon = () => (themeButton.classList.contains(iconTheme) ? 'ri-moon-line' : 'ri-sun-line');
-
-// We validate if the user previously chose a topic
-if (selectedTheme) {
-  // If the validation is fulfilled, we ask what the issue was to know if we activated or deactivated the dark
-  document.body.classList[selectedTheme === 'dark' ? 'add' : 'remove'](darkTheme);
-  themeButton.classList[selectedIcon === 'ri-moon-line' ? 'add' : 'remove'](iconTheme);
+function setMenu(open) {
+  menu.classList.toggle('open', open);
+  toggle.setAttribute('aria-expanded', String(open));
+  const label = open ? 'Close navigation' : 'Open navigation';
+  toggle.setAttribute('aria-label', label);
+  toggle.title = label;
+  toggle.querySelector('i').className = open ? 'ri-close-line' : 'ri-menu-line';
 }
 
-// Activate / deactivate the theme manually with the button
+toggle.addEventListener('click', () => setMenu(!menu.classList.contains('open')));
+menu.querySelectorAll('a').forEach(link => link.addEventListener('click', () => setMenu(false)));
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && menu.classList.contains('open')) {
+    setMenu(false);
+    toggle.focus();
+  }
+});
+document.addEventListener('click', event => {
+  if (!event.target.closest('.navigation')) setMenu(false);
+});
+window.matchMedia('(min-width: 681px)').addEventListener('change', event => {
+  if (event.matches) setMenu(false);
+});
+
+function setTheme(dark) {
+  document.body.classList.toggle('dark-theme', dark);
+  themeButton.querySelector('i').className = dark ? 'ri-sun-line' : 'ri-moon-line';
+  const label = `Switch to ${dark ? 'light' : 'dark'} theme`;
+  themeButton.setAttribute('aria-label', label);
+  themeButton.title = label;
+  document.querySelector('meta[name="theme-color"]').content = dark ? '#1c1f22' : '#f7f8fa';
+}
+
+try {
+  setTheme(localStorage.getItem('selected-theme') === 'dark');
+} catch {
+  setTheme(false);
+}
 themeButton.addEventListener('click', () => {
-  // Add or remove the dark / icon theme
-  document.body.classList.toggle(darkTheme);
-  themeButton.classList.toggle(iconTheme);
-  // We save the theme and the current icon that the user chose
-  localStorage.setItem('selected-theme', getCurrentTheme());
-  localStorage.setItem('selected-icon', getCurrentIcon());
+  const dark = !document.body.classList.contains('dark-theme');
+  setTheme(dark);
+  try {
+    localStorage.setItem('selected-theme', dark ? 'dark' : 'light');
+  } catch { /* Local file previews may not permit persistent storage. */ }
 });
 
-/*=============== CHANGE BACKGROUND HEADER ===============*/
-const scrollHeader = () => {
-  const header = document.getElementById('header');
-  // When the scroll is greater than 50 viewport height, add the scroll-header class to the header tag
-  this.scrollY >= 50 ? header.classList.add('bg-header') : header.classList.remove('bg-header');
-};
-window.addEventListener('scroll', scrollHeader);
-/*=============== SCROLL REVEAL ANIMATION ===============*/
-const sr = ScrollReveal({
-  origin: 'top',
-  distance: '60px',
-  duration: 2500,
-  Delay: 400,
-  reset: true,
-  // reset: true /* Animation repeat */
+document.querySelectorAll('[data-year]').forEach(element => {
+  element.textContent = new Date().getFullYear();
 });
 
-sr.reveal('.home__data, .projects__container, .testimonial__container, .footer__container');
-sr.reveal('.home__info div', { delay: 600, origin: 'bottom', interval: 100 });
-sr.reveal('.skills__content:nth-child(1), .contact__content:nth-child(1)', { origin: 'left' });
-sr.reveal('.skills__content:nth-child(2), .contact__content:nth-child(2)', { origin: 'right' });
-sr.reveal('.qualification__content, .services__card', { interval: 100 });
+const filters = document.querySelector('.project-filters');
+const projects = document.querySelectorAll('.project');
+filters.hidden = false;
+filters.querySelectorAll('button').forEach(button => {
+  button.addEventListener('click', () => {
+    filters.querySelectorAll('button').forEach(filter => {
+      filter.setAttribute('aria-pressed', String(filter === button));
+    });
+    let visibleCount = 0;
+    projects.forEach(project => {
+      const visible = button.dataset.filter === 'all' || project.dataset.category === button.dataset.filter;
+      project.hidden = !visible;
+      if (visible) visibleCount += 1;
+    });
+    document.getElementById('filter-status').textContent = `${visibleCount} ${visibleCount === 1 ? 'project' : 'projects'} shown.`;
+  });
+});
+
+const copyButton = document.getElementById('copy-email');
+const copyStatus = document.getElementById('copy-status');
+let copyReset;
+if (navigator.clipboard && window.isSecureContext) {
+  copyButton.hidden = false;
+  copyButton.addEventListener('click', async () => {
+    clearTimeout(copyReset);
+    try {
+      await navigator.clipboard.writeText('farhanasyraaf2002@gmail.com');
+      copyStatus.textContent = 'Email address copied.';
+      copyButton.querySelector('i').className = 'ri-check-line';
+    } catch {
+      copyStatus.textContent = 'Select the email address to copy it.';
+    }
+    copyReset = setTimeout(() => {
+      copyStatus.textContent = '';
+      copyButton.querySelector('i').className = 'ri-file-copy-line';
+    }, 3500);
+  });
+}
+
+if ('IntersectionObserver' in window) {
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      menu.querySelectorAll('a').forEach(link => {
+        if (link.hash === `#${entry.target.id}`) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+      });
+    });
+  }, { rootMargin: '-10% 0px -60% 0px' });
+  document.querySelectorAll('section[id]').forEach(section => observer.observe(section));
+}
